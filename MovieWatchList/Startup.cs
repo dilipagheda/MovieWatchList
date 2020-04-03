@@ -30,9 +30,10 @@ namespace MovieWatchList
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                          {
-                             options.SignIn.RequireConfirmedAccount = true;
+                             options.SignIn.RequireConfirmedAccount = false;
                              options.User.RequireUniqueEmail = false;
                          })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
