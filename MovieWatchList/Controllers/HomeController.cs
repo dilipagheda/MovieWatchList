@@ -20,6 +20,10 @@ namespace MovieWatchList.Controllers
 
         public IActionResult Index()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Watchlist");
+            }
             return View();
         }
 
