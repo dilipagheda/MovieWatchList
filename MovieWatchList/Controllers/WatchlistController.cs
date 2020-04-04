@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MovieWatchList.Data;
@@ -9,6 +10,7 @@ using MovieWatchList.ViewModels;
 
 namespace MovieWatchList.Controllers
 {
+    [Authorize]
     public class WatchlistController : Controller
     {
         private readonly ApplicationDbContext _dbContext;

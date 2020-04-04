@@ -38,19 +38,22 @@
             </td>
             <td>
                 @{
-                    if (item.InWatchlist)
+                    if (User.Identity.IsAuthenticated)
                     {
+                        if (item.InWatchlist)
+                        {
                         <button data-val="true" id="@item.MovieId">
                             -
                         </button>
-                    }
-                    else
-                    {
+                        }
+                        else
+                        {
                         <button data-val="false" id="@item.MovieId">
                             +
                         </button>
+                            }
+                        }
                     }
-                }
             </td>
         </tr>
 }

@@ -25,41 +25,58 @@ namespace MovieWatchList.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-
-            var userId = await GetCurrentUserId();
-            var userMovies = await _context.UserMovies.Where(m => m.UserId == userId).ToListAsync();
-
-            var allMovies = await _context.Movies.ToListAsync();
-
-            var model = allMovies.Select(m =>
+            if(User.Identity.IsAuthenticated)
             {
-                var userMovie = userMovies.FirstOrDefault(userMovie => userMovie.MovieId == m.Id);
+                var userId = await GetCurrentUserId();
+                var userMovies = await _context.UserMovies.Where(m => m.UserId == userId).ToListAsync();
 
-                if(userMovie != null)
+                var allMovies = await _context.Movies.ToListAsync();
+
+                var model = allMovies.Select(m =>
+                {
+                    var userMovie = userMovies.FirstOrDefault(userMovie => userMovie.MovieId == m.Id);
+
+                    if (userMovie != null)
+                    {
+                        return new MovieViewModel()
+                        {
+                            MovieId = m.Id,
+                            Title = m.Title,
+                            Year = m.Year,
+                            InWatchlist = true,
+                            Watched = userMovie.Watched,
+                            Rating = userMovie.Rating
+                        };
+                    }
+                    else
+                    {
+                        return new MovieViewModel()
+                        {
+                            MovieId = m.Id,
+                            Title = m.Title,
+                            Year = m.Year,
+                            InWatchlist = false
+                        };
+                    }
+                });
+                return View(model);
+            }
+            else
+            {
+                var allMovies = await _context.Movies.ToListAsync();
+
+                var model = allMovies.Select(m =>
                 {
                     return new MovieViewModel()
                     {
                         MovieId = m.Id,
                         Title = m.Title,
                         Year = m.Year,
-                        InWatchlist = true,
-                        Watched = userMovie.Watched,
-                        Rating = userMovie.Rating
                     };
-                }
-                else
-                {
-                    return new MovieViewModel()
-                    {
-                        MovieId = m.Id,
-                        Title = m.Title,
-                        Year = m.Year,
-                        InWatchlist = false
-                    };
-                }
-            });
-
-            return View(model);
+                });
+                return View(model);
+            }
+           
         }
 
         // GET: Movies/Details/5
