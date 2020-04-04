@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MovieWatchList.Data.Movie>
+﻿@model IEnumerable<MovieWatchList.ViewModels.MovieViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,6 +19,7 @@
                 @Html.DisplayNameFor(model => model.Year)
             </th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -31,11 +32,56 @@
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.MovieId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MovieId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MovieId">Delete</a>
+            </td>
+            <td>
+                @{
+                    if (item.InWatchlist)
+                    {
+                        <button data-val="true" id="@item.MovieId">
+                            -
+                        </button>
+                    }
+                    else
+                    {
+                        <button data-val="false" id="@item.MovieId">
+                            +
+                        </button>
+                    }
+                }
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+@section Scripts{ 
+    <script>
+        $(document).ready(function () {
+
+            $('button').click(function () {
+                var btn = $(this);
+                let movieId = btn.attr('id');
+                let val = btn.attr('data-val');
+
+                if (val === "false") {
+                    val = "true";
+                } else {
+                    val = "false";
+                }
+
+                $.get(`/Movies/AddRemove?movieId=${movieId}&val=${val}`, function (data) {
+                    if (data) {
+                        btn.attr('data-val', 'true');
+                        btn.html("-");
+                    } else {
+                        btn.attr('data-val', 'false');
+                        btn.html("+");
+                    }
+                });
+            });
+        });
+    </script>
+}
