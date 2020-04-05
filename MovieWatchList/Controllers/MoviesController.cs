@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -204,6 +205,7 @@ namespace MovieWatchList.Controllers
             return _context.Movies.Any(e => e.Id == id);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<bool> AddRemove([FromQuery] int movieId, bool val)
         {
